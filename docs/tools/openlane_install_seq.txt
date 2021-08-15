@@ -1,0 +1,50 @@
+# mkdir projects
+# which git 
+// If you are not getting the git instal path , you have to install git using the following commands 
+# sudo apt update
+# sudo apt install git
+
+//One git is installed , clone the repo 
+ 
+# git clone https://github.com/ISL-ECE-CEG-AU/GPS_Baseband.git
+# cd GPS_Baseband
+# make install 
+
+// Download sk130pdk.tar.gz from the google Drive  https://drive.google.com/drive/folders/1UvUBrWBDPebylZM7YWYYoa6Shjdpoc1V?usp=sharing 
+// and copy it to caravel_user_project directory 
+
+# tar xvzf sk130pdk.tar.gz 
+# cd sk130pdk
+# pwd 
+
+// Set PDK_ROOT to pwd  
+
+# export PDK_ROOT=/home/babu/projects/GPS_Baseband/sk130pdk
+# cd ../
+
+Set OPENLANE_ROOT
+
+# export OPENLANE_ROOT=/home/babu/projects/GPS_Baseband/eda_tool
+
+// Before installing OpenLane tool , chenck whether docker command is installed 
+# which docker 
+
+// If docker is not installed , install it using the steps mentioned in the link 
+
+https://docs.docker.com/engine/install/ubuntu/
+or 
+https://www.simplilearn.com/tutorials/docker-tutorial/how-to-install-docker-on-ubuntu
+
+# make openlane
+
+# cd openlane 
+# make user_proj_example
+# make user_project_wrapper
+
+
+
+
+
+
+
+ 
