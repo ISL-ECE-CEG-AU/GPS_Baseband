@@ -89,83 +89,61 @@ module user_proj_example #(
     wire [3:0] wstrb;
     wire [31:0] la_write;
 
-    // WB MI A
-    assign valid = wbs_cyc_i && wbs_stb_i; 
-    assign wstrb = wbs_sel_i & {4{wbs_we_i}};
-    assign wbs_dat_o = rdata;
-    assign wdata = wbs_dat_i;
-
-    // IO
-    assign io_out = count;
-    assign io_oeb = {(`MPRJ_IO_PADS-1){rst}};
+    wire gps_clk ;
+    wire [1:0] gps_data_i ;
+    wire [1:0] gps_data_q ;
+    wire dll_sel ;
+    wire select_qmaxim ;
+    wire codeout , epochrx ;
 
     // IRQ
     assign irq = 3'b000;	// Unused
 
-    // LA
-    assign la_data_out = {{(127-BITS){1'b0}}, count};
-    // Assuming LA probes [63:32] are for controlling the count register  
-    assign la_write = ~la_oenb[63:32] & ~{BITS{valid}};
-    // Assuming LA probes [65:64] are for controlling the count clk & reset  
-    assign clk = (~la_oenb[64]) ? la_data_in[64]: wb_clk_i;
-    assign rst = (~la_oenb[65]) ? la_data_in[65]: wb_rst_i;
 
-    counter #(
-        .BITS(BITS)
-    ) counter(
-        .clk(clk),
-        .reset(rst),
-        .ready(wbs_ack_o),
-        .valid(valid),
-        .rdata(rdata),
-        .wdata(wbs_dat_i),
-        .wstrb(wstrb),
-        .la_write(la_write),
-        .la_input(la_data_in[63:32]),
-        .count(count)
-    );
+    //io_oeb is active low signal
 
-endmodule
+    assign gps_clk = io_in[18] ;                           // IO[18]
+    assign io_oeb[18]= 1'b1;
 
-module counter #(
-    parameter BITS = 32
-)(
-    input clk,
-    input reset,
-    input valid,
-    input [3:0] wstrb,
-    input [BITS-1:0] wdata,
-    input [BITS-1:0] la_write,
-    input [BITS-1:0] la_input,
-    output ready,
-    output [BITS-1:0] rdata,
-    output [BITS-1:0] count
-);
-    reg ready;
-    reg [BITS-1:0] count;
-    reg [BITS-1:0] rdata;
+    assign gps_data_i[0] = io_in[19] ;                     // IO[19]
+    assign io_oeb[19]= 1'b1;
 
-    always @(posedge clk) begin
-        if (reset) begin
-            count <= 0;
-            ready <= 0;
-        end else begin
-            ready <= 1'b0;
-            if (~|la_write) begin
-                count <= count + 1;
-            end
-            if (valid && !ready) begin
-                ready <= 1'b1;
-                rdata <= count;
-                if (wstrb[0]) count[7:0]   <= wdata[7:0];
-                if (wstrb[1]) count[15:8]  <= wdata[15:8];
-                if (wstrb[2]) count[23:16] <= wdata[23:16];
-                if (wstrb[3]) count[31:24] <= wdata[31:24];
-            end else if (|la_write) begin
-                count <= la_write & la_input;
-            end
-        end
-    end
+    assign gps_data_i[1] = io_in[20] ;                     // IO[20]
+    assign io_oeb[20]= 1'b1;
+
+    assign gps_data_q[0] = io_in[21] ;                     // IO[21]
+    assign io_oeb[21]= 1'b1;
+
+    assign gps_data_q[1] = io_in[22] ;                     // IO[22]
+    assign io_oeb[22]= 1'b1;
+
+    assign dll_sel = la_data_in[0] ;
+    assign select_qmaxim = la_data_in[1] ;
+    assign la_data_out[2] = codeout ;
+    assign la_data_out[3] = epochrx ;
+
+    gps_multichannel gps_engine_i (
+
+    .mclr (wb_rst_i),
+    .mclk (gps_clk ),
+    .adc2bit_i (gps_data_i),
+    .adc2bit_q (gps_data_q),
+    .codeout(codeout),
+    .epochrx(epochrx),
+    .dll_sel (dll_sel),
+    .select_qmaxim (select_qmaxim),
+    .wb_clk_i (wb_clk_i), 
+    .wb_rst_i (wb_rst_i), 
+    .wb_adr_i (wbs_adr_i), 
+    .wb_dat_i (wbs_dat_i), 
+    .wb_dat_o (wbs_dat_o),
+    .wb_we_i (wbs_we_i), 
+    .wb_stb_i (wbs_stb_i), 
+    .wb_cyc_i (wbs_cyc_i),
+    .wb_ack_o (wbs_ack_o)
+
+    );	    
 
 endmodule
+
 `default_nettype wire
