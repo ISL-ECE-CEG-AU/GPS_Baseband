@@ -169,25 +169,33 @@ module gps_engine_tb( );
 	//
 
 	// program internal registers
-	u0.wb_write(0,CARR_FREQUENCY_REG_ADDR,32'h0FBD5296); // load prescaler lo-byte 1.405MHz
-	u0.wb_write(0,CODE_FREQUENCY_REG_ADDR,32'h16EA95A4); // load prescaler lo-byte 2.046MHz
+	u0.wb_write(0,CARR_FREQUENCY_REG_ADDR,32'h0FB82165); // load prescaler lo-byte 1.405MHz-1.5KHz
+	u0.wb_write(0,CODE_FREQUENCY_REG_ADDR,32'h16EA4A8C); // load prescaler lo-byte 2.046MHz
     u0.wb_write(0,ACQ_THRESHOLD_REG_ADDR,32'h000003E8); //Threshold value given
     u0.wb_write(0,CONFG_REG_ADDR,32'h1409A1BE);  //Satellite ID 20 & Sine LUT
     u0.wb_write(0,CARR_FREQUENCY_OFFSET_REG_ADDR,32'h00000000);  //Offset words are set to zero
     u0.wb_write(0,CODE_FREQUENCY_OFFSET_REG_ADDR,32'h00000000);
     u0.wb_read(0,STATUS_REG_ADDR,rs_reg);
+    repeat(4) @(posedge wb_clk_i);
     #100 mclr = 1'b0;
     #100 mclr = 1'b1;
         // check the bit
 	 while(!rs_reg[0]) begin
 	    u0.wb_read(0,STATUS_REG_ADDR,rs_reg); // poll it until it is zero
+            repeat(4) @(posedge wb_clk_i);
      end
     u0.wb_read(0,PROMPT_IDATA_REG_ADDR,dip);
+    repeat(4) @(posedge wb_clk_i);
     u0.wb_read(0,PROMPT_QDATA_REG_ADDR,dqp);
+    repeat(4) @(posedge wb_clk_i);
     u0.wb_read(0,EARLY_IDATA_REG_ADDR,die);
+    repeat(4) @(posedge wb_clk_i);
     u0.wb_read(0,EARLY_QDATA_REG_ADDR,dqe);
+    repeat(4) @(posedge wb_clk_i);
     u0.wb_read(0,LATE_IDATA_REG_ADDR,dil);
+    repeat(4) @(posedge wb_clk_i);
     u0.wb_read(0,LATE_QDATA_REG_ADDR,dql);
+    repeat(4) @(posedge wb_clk_i);
     rs_reg[0] = ~rs_reg[0];
     u0.wb_write(0,STATUS_REG_ADDR,rs_reg);
     $display("WB_READ @ %t : dip = 0x%h ", $time,dip);
