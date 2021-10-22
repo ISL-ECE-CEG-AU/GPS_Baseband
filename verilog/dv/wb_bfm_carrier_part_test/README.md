@@ -41,5 +41,5 @@ chmod +x verify_carrier.sh
 In the window opened by GTKWave, please click on `gps_engine_tb` that appears on the left pane.
 It will list internal instantiations. Go through the hierarchy and select any signal which you want to view and click insert which will be present at the bottom.
 
-Go Inside `gps_engine_i` --> `ch1` --> `tid` --> Click on it to list the waveforms in that module --> Click on `dip_track` and `dqp_track` and give insert --> Right Click on the Wavename in the waveform window and click `Data Format` --> `Click `Analog` --> Click `Interpolated` and you can see the Analog Waveform with correct frequency
+Go Inside `gps_engine_i` --> `ch1` --> `tid` --> Click on it to list the waveforms in that module --> Click on `dip_track` and `dqp_track` and give insert --> Right Click on the Wavename in the waveform window and click `Data Format` --> `Click `Analog` --> Click `Interpolated` and you can see the Analog Waveform with correct frequency of 100Hz
 
