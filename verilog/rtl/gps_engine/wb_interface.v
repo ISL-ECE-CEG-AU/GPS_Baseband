@@ -132,13 +132,13 @@ always @(posedge wb_clk_i or negedge wb_rst_i)
 	else
 	begin
 		case (wb_adr_i) 
-			PROMPT_IDATA_REG_ADDR : wb_dat_o <= #1 { {12{1'b0}},prompt_idata};
-			PROMPT_QDATA_REG_ADDR : wb_dat_o <= #1 { {12{1'b0}},prompt_qdata};
-			LATE_IDATA_REG_ADDR  : wb_dat_o <= #1 { {12{1'b0}},late_idata};
-			LATE_QDATA_REG_ADDR  : wb_dat_o <= #1 { {12{1'b0}},late_qdata};
-			EARLY_IDATA_REG_ADDR : wb_dat_o <= #1 { {12{1'b0}},early_idata};
-			EARLY_QDATA_REG_ADDR : wb_dat_o <= #1 { {12{1'b0}},early_qdata};
-			STATUS_REG_ADDR      : wb_dat_o <= #1 { {30{1'b0}},acq_complete,intg_ready_reg};  
+			PROMPT_IDATA_REG_ADDR : wb_dat_o <=  { {12{1'b0}},prompt_idata};
+			PROMPT_QDATA_REG_ADDR : wb_dat_o <=  { {12{1'b0}},prompt_qdata};
+			LATE_IDATA_REG_ADDR  : wb_dat_o <=  { {12{1'b0}},late_idata};
+			LATE_QDATA_REG_ADDR  : wb_dat_o <=  { {12{1'b0}},late_qdata};
+			EARLY_IDATA_REG_ADDR : wb_dat_o <=  { {12{1'b0}},early_idata};
+			EARLY_QDATA_REG_ADDR : wb_dat_o <=  { {12{1'b0}},early_qdata};
+			STATUS_REG_ADDR      : wb_dat_o <=  { {30{1'b0}},acq_complete,intg_ready_reg};  
 			default: ;
 		endcase
 	end
