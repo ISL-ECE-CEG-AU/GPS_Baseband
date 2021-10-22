@@ -1,4 +1,4 @@
-# Designs in ../rtl folder
+# Designs in ../../rtl folder
 # Testbench in this folder
 # Requires iverilog and gtkwave as binary executables.
 
