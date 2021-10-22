@@ -75,24 +75,24 @@ reg [19:0] temp1;
     reg [19:0] x, y;
 
     if(res == 1'b 0) begin
-      x = {1{1'b0}};
-      y = {1{1'b0}};
-      i_arm <= {16{1'b0}};
-      q_arm <= {16{1'b0}};
-      i_arm_by2 <= {16{1'b0}};
-      q_arm_by2 <= {16{1'b0}};
+      x = {20{1'b0}};
+      y = {20{1'b0}};
+      i_arm <= {20{1'b0}};
+      q_arm <= {20{1'b0}};
+      i_arm_by2 <= {20{1'b0}};
+      q_arm_by2 <= {20{1'b0}};
     end else begin
       if(ain[19] == 1'b 0) begin
         x = ain;
       end
       else begin
-        x = {1'b 0,((( ~ain[14:0])) + 1'b 1)};
+        x = {1'b 0,((( ~ain[19:0])) + 1'b 1)};
       end
       if(bin[19] == 1'b 0) begin
         y = bin;
       end
       else begin
-        y = {1'b 0,((( ~bin[14:0])) + 1'b 1)};
+        y = {1'b 0,((( ~bin[19:0])) + 1'b 1)};
         //---2's complement
       end
       i_arm <= x;
@@ -109,7 +109,7 @@ reg [19:0] temp1;
     reg [19:0] temp;
 
     if(res == 1'b 0) begin
-      temp = {1{1'b0}};
+      temp = {20{1'b0}};
       //		 acq_temp <= '0';
     end else begin
       if((i_arm > q_arm)) begin
