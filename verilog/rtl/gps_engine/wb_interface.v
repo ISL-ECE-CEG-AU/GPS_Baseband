@@ -138,7 +138,7 @@ always @(posedge wb_clk_i or negedge wb_rst_i)
 			LATE_QDATA_REG_ADDR  : wb_dat_o <=  { {12{1'b0}},late_qdata};
 			EARLY_IDATA_REG_ADDR : wb_dat_o <=  { {12{1'b0}},early_idata};
 			EARLY_QDATA_REG_ADDR : wb_dat_o <=  { {12{1'b0}},early_qdata};
-			STATUS_REG_ADDR      : wb_dat_o <=  { {30{1'b0}},acq_complete,intg_ready_reg};  
+			STATUS_REG_ADDR      : wb_dat_o <= { {30{1'b0}},acq_complete,intg_ready_reg};  
 			default: ;
 		endcase
 	end
