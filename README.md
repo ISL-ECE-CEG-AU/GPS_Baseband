@@ -22,15 +22,21 @@ The Caravel user_proj_example.v has eight instanciation of GPS channel and a I2C
 The following block diagram shows the internal blocks of single gps channel 
 ![gps_single_channel](https://user-images.githubusercontent.com/88964390/138535817-e26fe5bf-d545-4786-bf1d-8c33a29dbd9a.png)
 
-- wb_interface : Provides interface between 32-bit wiishbone bus and internal blocks . Through this wishbone interface , software can write and read memory mapped registers . The details of the wishbone registers is mentioned below .
-- adc2to3bit :
-- signmul_bhv :
-- clk_gen_gps_new :
-- signmag_twocomp :
-- codecontrollogic :
-- threshold :
-- threshold_ctl :
-- track_intganddump :
+
+1. `accumulator.v` - 20 bit accumulator 
+2. `adc2to3bit.v` - Two to three bit mapping of the input data
+3. `clk_gen_gps_new.v` - Module containing NCO for Carrier Generation and code clock generation
+4. `codectrllogic.v`- Topmost module for generation of three versions of Goldcodes (Early,Late,Prompt)
+5. `codegen.v` - Goldcode instantiation module
+6. `goldcode.v`- Goldcode generation module based on the Satellite ID
+7. `gps_multichannel.v` - Topmost Module containing 8 single channels and address decoding
+8. `gps_single_channel.v` - Single channel module containing all module instantiations and Wishbone Interface
+9. `signmag_twocomp_vv.v` - Sign Magnitude to Two's complement Conversion
+10. `signmul.v` - 3 bit Sign Magnitude Number multiplier
+11. `thresh_control.v` - Threshold check block to generate Carrier change pulse to invoke Doppler
+12. `threshold.v` - Threshold check block to check whether the satellite is acquired or not
+13. `track_intganddump.v` - Gold code multiplication with Integrate and dumping of 6 signals(3 - i and 3 - q)
+14. `wb_interface.v` - Provides interface between 32-bit wiishbone bus and internal blocks . Through this wishbone interface , software can write and read memory mapped registers . The details of the wishbone registers is mentioned below .
 
 Wishbone Registers
 ----------------
@@ -61,6 +67,7 @@ The testcase can be simulated by executing the following command
 .. code:: bash
 
      cd verilog/dv/wb_bfm_goldcode_test/
+     chmod +x verify_gold.sh
      ./verify_gold.sh
 	
 
