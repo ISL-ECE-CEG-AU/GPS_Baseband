@@ -5,6 +5,7 @@ Table of contents
 =================
 
 -  `Overview `
+-  `Repository Overview`
 -  `RTL Implementation `
 -  `RTL Verification `
 -  `ASIC Implementation `
@@ -12,6 +13,12 @@ Table of contents
 Overview
 ========
 In this proposal, the entire GPS baseband functionality is realized using a combination of custom designed logic functionality GPS Engine (ASIC portion) and the on chip RISCV microprocessor to provide the complete position fix starting from the digitized IF input bits. The signal processing operations in the baseband comprise of dispreading and data demodulation performed on six identical channels followed by psuedo range, and position fix computation. The major part of the signal processing operations for the six channels are carried out in the GPS Engine and the low frequency control tasks and position fix computation tasks are carried out in the RISCV processor.
+
+Repository Overview
+===================
+1. All the RTL files are located in `GPS_Baseband/verilog/rtl/` and `GPS_Baseband/verilog/rtl/gps_engine` including GPS Engine Modules and user_proj_example and user_proj_wrapper.
+2. The Testbench files are located in '`GPS_Baseband/verilog/dv/`. The main testbenches are `wb_bfm_carrier_part_test`, `wb_bfm_goldcode_test`, `wb_bfm_test`.
+3. For running the Openlane flow for the `user_proj_example.v` , go to `GPS_Baseband/openlane/` and run make user_proj_example in the terminal.
 
 RTL Implementation
 ========
@@ -59,16 +66,27 @@ Test Case Description
 ----------------
 The following test cases were created and used to verify the gps channel at block level and system level 
 
-- wb_bfm_carrier_part_test : <add test case description and the modules covered>
-- wb_bfm_goldcode_test : <add test case description and the modules covered>
+- wb_bfm_carrier_part_test : This test is to verify the working of Carrier generation (cos and sine) at a correct frequency and proper integration and dump of the signals. 
+The Sine Input Text file has the data of 1.405MHz sine wave sampled at 5.714285MHz Clock generated from Matlab. The Local Gold code generation has been forced to 1, so that we can exploit the effects of carrier generation alone. When the sine data is given as input to the RTL and the Local Carrier Frequency is set to 1.405MHz + 100Hz, the I-arm and Q-arm must contain on the the Difference Frequency component, which is 100Hz. 
+Thus, this proves to us that our carrier generation is taken place for a proper frequency, multiplication has taken place correctly and Integrate and dump is also done correctly.
+The waveform can be seen using the gtkwave viewer and the waves to be seen are `gps_engine_i.ch1.tid.dip_track` and `gps_engine_i.ch1.tid.dqp_track` (Can be seen as Analog for Better interpretation)
+
+- wb_bfm_goldcode_test : This Testcase is to check the Goldcode generation and creating Half chip delays incase of No acquisition. The Carrier Frequency has been set to 0Hz and the Cosine wave has an amplitude of +1 and Sine wave has an amplitude of 0 throughout the simulation time. 
+The Input Goldcode Text file contains a delayed version of the goldcode data corresponding to Satellite 20. This data has been created using Matlab and fed into the RTL. With Delay we have introduced, an acquistion peak value of around 5000 is expected around 6ms time.
+This can be checked by viewing the waveform `gps_engine_i.ch1.tid.dip_track` , `gps_engine_i.ch1.tid.die_track` , `gps_engine_i.ch1.tid.dil_track`.
+From the waveform, we can interpret that the Half a chip delay introduction increases the I arm data and thus acquistion peak is reached. After reaching peak, as we have given the Threshold value to be high for demonstrational purposes, the Delay chipping continues and the peak is not seen in the subsequent epochs.
 
 The testcase can be simulated by executing the following command 
 
 .. code:: bash
 
      cd verilog/dv/wb_bfm_goldcode_test/
-     chmod +x verify_gold.sh
      ./verify_gold.sh
+
+.. code:: bash
+
+     cd verilog/dv/wb_bfm_carrier_part_test/
+     ./verify_carrier.sh
 	
 
 ASIC Implementation  
