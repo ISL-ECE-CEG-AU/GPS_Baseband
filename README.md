@@ -1,4 +1,4 @@
-Caravel User Project
+GPS Baseband Chip
 ====================
 
 Table of contents
@@ -45,7 +45,38 @@ Pin Description
 
 Verification Environment 
 ========
-The verification environment is shown in the following block diagram . A wishbone bus function model is used to create wishbone write and read transactions .
+The verification environment is shown in the following block diagram . A wishbone bus function model is used to create wishbone write and read transactions . The gps raw data is stored to a txt file and being used in the simulation environment .
+
 ![tb_img](https://user-images.githubusercontent.com/88964390/138536675-274e7149-0dc1-4842-97ce-edc6ff4be3a8.png)
+
+Test Case Description
+----------------
+The following test cases were created and used to verify the gps channel at block level and system level 
+
+- wb_bfm_carrier_part_test : <add test case description and the modules covered>
+- wb_bfm_goldcode_test : <add test case description and the modules covered>
+
+The testcase can be simulated by executing the following command 
+
+.. code:: bash
+
+     cd verilog/dv/wb_bfm_goldcode_test/
+     ./verify_gold.sh
+	
+
+ASIC Implementation  
+========
+	
+The Physical implementation of single gps channel is carried out using openlane tool flow with the timing constraint of 50MHz .
+	
+![user_proj_example gds](https://user-images.githubusercontent.com/88964390/138538843-23880db7-d4f7-4e24-a8b3-6b2377f5d692.png)
+	
+
+
+	
+
+
+
+
 
 
