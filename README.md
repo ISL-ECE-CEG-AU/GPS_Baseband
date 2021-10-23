@@ -25,7 +25,7 @@ RTL Implementation
 ========
 ![caravel_based_img](https://user-images.githubusercontent.com/88964390/138535599-c008bcb2-fc9a-4cb0-b36b-a32f13a39cce.png)
 
-The Caravel user_proj_example.v has eight instanciation of GPS channel and a I2C Master . The GPS Channel < write the functionality of gps channel> and the I2C Master is used to configure the GPS RF Front End chipset .
+The Caravel user_proj_example.v has eight instanciation of GPS channel and a I2C Master . Each GPS Channel has (i) Gold Code generators with the Prompt(P) , Early(E) and Late (L) versions with the latter two being used for the DLL (ii) Number Controlled Oscillators (NCOs) for code clocks for code tracking as well as carrier sine and cosine generation for digital downconversion and carrier tracking (iii) multiple integrate dump filters (accumulators) to perform the correlation operations. and the I2C Master is used to configure the GPS RF Front End chipset .
 
 The following block diagram shows the internal blocks of single gps channel 
 ![gps_single_channel](https://user-images.githubusercontent.com/88964390/138535817-e26fe5bf-d545-4786-bf1d-8c33a29dbd9a.png)
