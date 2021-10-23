@@ -1,5 +1,13 @@
 ## Testbench for verification of digital logic
 
+## Testbench Description
+
+This test is to verify the working of Carrier generation (cos and sine) at a correct frequency and proper integration and dump of the signals. 
+
+The Sine Input Text file has the data of 1.405MHz sine wave sampled at 5.714285MHz Clock generated from Matlab. The Local Gold code generation has been forced to 1, so that we can exploit the effects of carrier generation alone. When the sine data is given as input to the RTL and the Local Carrier Frequency is set to 1.405MHz + 100Hz, the I-arm and Q-arm must contain on the the Difference Frequency component, which is 100Hz. 
+Thus, this proves to us that our carrier generation is taken place for a proper frequency, multiplication has taken place correctly and Integrate and dump is also done correctly.
+The waveform can be seen using the gtkwave viewer and the waves to be seen are `gps_engine_i.ch1.tid.dip_track` and `gps_engine_i.ch1.tid.dqp_track` (Can be seen as Analog for Better interpretation)
+
 The design files reside in `GPS_Baseband/verilog/rtl/gps_engine` and are listed below.
 
 1. `accumulator.v` - 20 bit accumulator 

@@ -1,5 +1,12 @@
 ## Testbench for verification of digital logic
 
+## Testcase Description
+
+This Testcase is to check the Goldcode generation and creating Half chip delays incase of No acquisition. The Carrier Frequency has been set to 0Hz and the Cosine wave has an amplitude of +1 and Sine wave has an amplitude of 0 throughout the simulation time. 
+The Input Goldcode Text file contains a delayed version of the goldcode data corresponding to Satellite 20. This data has been created using Matlab and fed into the RTL. With Delay we have introduced, an acquistion peak value of around 5000 is expected around 6ms time.
+This can be checked by viewing the waveform `gps_engine_i.ch1.tid.dip_track` , `gps_engine_i.ch1.tid.die_track` , `gps_engine_i.ch1.tid.dil_track`.
+From the waveform, we can interpret that the Half a chip delay introduction increases the I arm data and thus acquistion peak is reached. After reaching peak, as we have given the Threshold value to be high for demonstrational purposes, the Delay chipping continues and the peak is not seen in the subsequent epochs.
+
 The design files reside in `GPS_Baseband/verilog/rtl/gps_engine` and are listed below.
 
 1. `accumulator.v` - 20 bit accumulator 

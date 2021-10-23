@@ -1,5 +1,9 @@
 ## Testbench for verification of digital logic
 
+## Testcase Description
+
+This testcase uses 730ms GPS Data obtained from Satellite as Input. This testcase is the basic one which helps us to verify that there are no Invalid Nets inside the RTL.
+
 The design files reside in `GPS_Baseband/verilog/rtl/gps_engine` and are listed below.
 
 1. `accumulator.v` - 20 bit accumulator 

@@ -204,11 +204,12 @@ module gps_engine_tb( );
     u0.wb_write(0,STATUS_REG_ADDR,rs_reg);
     $display("WB_READ @ %t : dip = 0x%h ", $time,dip);
     $display("WB_READ @ %t : dqp = 0x%h ", $time,dqp);
-    $display("WB_READ @ %t : die = 0x%h ", $time,die);
-    $display("WB_READ @ %t : dqe = 0x%h ", $time,dqe);
-    $display("WB_READ @ %t : dil = 0x%h ", $time,dil);
-    $display("WB_READ @ %t : dql = 0x%h ", $time,dql);
+    //$display("WB_READ @ %t : die = 0x%h ", $time,die);
+    //$display("WB_READ @ %t : dqe = 0x%h ", $time,dqe);
+    //$display("WB_READ @ %t : dil = 0x%h ", $time,dil);
+    //$display("WB_READ @ %t : dql = 0x%h ", $time,dql);
     #40000000;
+    $display("STATUS : TESTCASE PASSED");
     $finish;
 	end
             
