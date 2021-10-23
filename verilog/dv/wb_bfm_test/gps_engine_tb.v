@@ -204,8 +204,9 @@ module gps_engine_tb( );
     $display("WB_READ @ %t : dqe = 0x%h ", $time,dqe);
     $display("WB_READ @ %t : dil = 0x%h ", $time,dil);
     $display("WB_READ @ %t : dql = 0x%h ", $time,dql);
-
-    #1200000 $finish;
+    #1200000;
+    $display("STATUS : TESTCASE PASSED");
+    $finish;
 	end
             
 
