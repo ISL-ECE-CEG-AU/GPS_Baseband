@@ -9,6 +9,7 @@ Table of contents
 -  `RTL Implementation `
 -  `RTL Verification `
 -  `ASIC Implementation `
+-  `Current Status of Tasks  `
 
 Overview
 ========
@@ -96,6 +97,11 @@ The Physical implementation of single gps channel is carried out using openlane 
 	
 ![user_proj_example gds](https://user-images.githubusercontent.com/88964390/138538843-23880db7-d4f7-4e24-a8b3-6b2377f5d692.png)
 	
+
+Current Status of Tasks 
+========
+
+![image](https://user-images.githubusercontent.com/88964390/138555379-cf1b456e-c435-4516-bb30-61e0a7adbc9e.png)
 
 
 	
