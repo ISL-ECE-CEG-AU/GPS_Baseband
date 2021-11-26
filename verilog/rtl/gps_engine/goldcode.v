@@ -39,7 +39,9 @@ epochrx,
 code_sel,
 goldcode,
 gold1,
-gold2
+gold2,
+irnss_sel,
+irnss_code
 );
 
 input reset, clk;
@@ -47,6 +49,8 @@ input car_change;
 output epochrx;
 input [4:0] code_sel;
 output goldcode, gold1, gold2;
+input irnss_sel;
+input [10:1] irnss_code;
 
 wire reset;
 wire clk;
@@ -84,13 +88,15 @@ reg g2out;
       epochrx <= 1'b 0;
     end
   end
+  wire [10:1] code_wire;
+  assign code_wire = irnss_sel==1'b0 ? 10'b 1111111111 : irnss_code;
 
   always @(negedge reset or posedge clk or posedge car_change) begin
     if(reset == 1'b 0) begin
-      g2codereg <= 10'b 1111111111;
+      g2codereg <= code_wire;
     end 
     else if(car_change == 1'b 1) begin
-      g2codereg <= 10'b 1111111111;
+      g2codereg <= code_wire;
     end 
     else begin
       g2codereg[1] <= g2codereg[2] ^ g2codereg[3] ^ g2codereg[6] ^ g2codereg[8] ^ g2codereg[9] ^ g2codereg[10];
@@ -106,172 +112,178 @@ reg g2out;
     end
     else begin
       // goldcode<='1';
-      case(code_sel)
-      5'b 00001 : begin
-        g2out <= g2codereg[2] ^ g2codereg[6];
+      if(irnss_sel == 1'b0) begin
+        case(code_sel)
+        5'b 00001 : begin
+          g2out <= g2codereg[2] ^ g2codereg[6];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 00010 : begin
+          g2out <= g2codereg[3] ^ g2codereg[7];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 00011 : begin
+          g2out <= g2codereg[4] ^ g2codereg[8];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 00100 : begin
+          g2out <= g2codereg[5] ^ g2codereg[9];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 00101 : begin
+          g2out <= g2codereg[1] ^ g2codereg[9];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 00110 : begin
+          g2out <= g2codereg[2] ^ g2codereg[10];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 00111 : begin
+          g2out <= g2codereg[1] ^ g2codereg[8];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 01000 : begin
+          g2out <= g2codereg[2] ^ g2codereg[9];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 01001 : begin
+          g2out <= g2codereg[3] ^ g2codereg[10];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 01010 : begin
+          g2out <= g2codereg[2] ^ g2codereg[3];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 01011 : begin
+          g2out <= g2codereg[3] ^ g2codereg[4];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 01100 : begin
+          g2out <= g2codereg[5] ^ g2codereg[6];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 01101 : begin
+          g2out <= g2codereg[6] ^ g2codereg[7];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 01110 : begin
+          g2out <= g2codereg[7] ^ g2codereg[8];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 01111 : begin
+          g2out <= g2codereg[8] ^ g2codereg[9];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 10000 : begin
+          g2out <= g2codereg[9] ^ g2codereg[10];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 10001 : begin
+          g2out <= g2codereg[1] ^ g2codereg[4];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 10010 : begin
+          g2out <= g2codereg[2] ^ g2codereg[5];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 10011 : begin
+          g2out <= g2codereg[3] ^ g2codereg[6];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 10100 : begin
+          g2out <= g2codereg[4] ^ g2codereg[7];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 10101 : begin
+          g2out <= g2codereg[5] ^ g2codereg[8];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 10110 : begin
+          g2out <= g2codereg[6] ^ g2codereg[9];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 10111 : begin
+          g2out <= g2codereg[1] ^ g2codereg[3];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 11000 : begin
+          g2out <= g2codereg[4] ^ g2codereg[6];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 11001 : begin
+          g2out <= g2codereg[5] ^ g2codereg[7];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 11010 : begin
+          g2out <= g2codereg[6] ^ g2codereg[8];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 11011 : begin
+          g2out <= g2codereg[7] ^ g2codereg[9];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 11100 : begin
+          g2out <= g2codereg[8] ^ g2codereg[10];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 11101 : begin
+          g2out <= g2codereg[1] ^ g2codereg[6];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 11110 : begin
+          g2out <= g2codereg[1] ^ g2codereg[7];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 11111 : begin
+          g2out <= g2codereg[3] ^ g2codereg[8];
+          g1out <= g1codereg[10];
+          goldcode <= g1out ^ g2out;
+        end
+        5'b 00000 : begin
+          g2out <= g2codereg[4] ^ g2codereg[9];
+          g1out <= g1codereg[10];
+          goldcode <= 1'b 1;
+        end
+        default : begin
+          g2out <= 1'b 1;
+          //edited intially commented originally '0'
+        end
+        endcase
+      end else begin
         g1out <= g1codereg[10];
+        g2out <= g2codereg[10];
         goldcode <= g1out ^ g2out;
       end
-      5'b 00010 : begin
-        g2out <= g2codereg[3] ^ g2codereg[7];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 00011 : begin
-        g2out <= g2codereg[4] ^ g2codereg[8];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 00100 : begin
-        g2out <= g2codereg[5] ^ g2codereg[9];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 00101 : begin
-        g2out <= g2codereg[1] ^ g2codereg[9];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 00110 : begin
-        g2out <= g2codereg[2] ^ g2codereg[10];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 00111 : begin
-        g2out <= g2codereg[1] ^ g2codereg[8];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 01000 : begin
-        g2out <= g2codereg[2] ^ g2codereg[9];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 01001 : begin
-        g2out <= g2codereg[3] ^ g2codereg[10];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 01010 : begin
-        g2out <= g2codereg[2] ^ g2codereg[3];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 01011 : begin
-        g2out <= g2codereg[3] ^ g2codereg[4];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 01100 : begin
-        g2out <= g2codereg[5] ^ g2codereg[6];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 01101 : begin
-        g2out <= g2codereg[6] ^ g2codereg[7];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 01110 : begin
-        g2out <= g2codereg[7] ^ g2codereg[8];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 01111 : begin
-        g2out <= g2codereg[8] ^ g2codereg[9];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 10000 : begin
-        g2out <= g2codereg[9] ^ g2codereg[10];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 10001 : begin
-        g2out <= g2codereg[1] ^ g2codereg[4];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 10010 : begin
-        g2out <= g2codereg[2] ^ g2codereg[5];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 10011 : begin
-        g2out <= g2codereg[3] ^ g2codereg[6];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 10100 : begin
-        g2out <= g2codereg[4] ^ g2codereg[7];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 10101 : begin
-        g2out <= g2codereg[5] ^ g2codereg[8];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 10110 : begin
-        g2out <= g2codereg[6] ^ g2codereg[9];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 10111 : begin
-        g2out <= g2codereg[1] ^ g2codereg[3];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 11000 : begin
-        g2out <= g2codereg[4] ^ g2codereg[6];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 11001 : begin
-        g2out <= g2codereg[5] ^ g2codereg[7];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 11010 : begin
-        g2out <= g2codereg[6] ^ g2codereg[8];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 11011 : begin
-        g2out <= g2codereg[7] ^ g2codereg[9];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 11100 : begin
-        g2out <= g2codereg[8] ^ g2codereg[10];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 11101 : begin
-        g2out <= g2codereg[1] ^ g2codereg[6];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 11110 : begin
-        g2out <= g2codereg[1] ^ g2codereg[7];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 11111 : begin
-        g2out <= g2codereg[3] ^ g2codereg[8];
-        g1out <= g1codereg[10];
-        goldcode <= g1out ^ g2out;
-      end
-      5'b 00000 : begin
-        g2out <= g2codereg[4] ^ g2codereg[9];
-        g1out <= g1codereg[10];
-        goldcode <= 1'b 1;
-      end
-      default : begin
-        g2out <= 1'b 1;
-        //edited intially commented originally '0'
-      end
-      endcase
       gold1 <= g1out;
       gold2 <= g2out;
     end

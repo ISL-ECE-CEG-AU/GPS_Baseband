@@ -42,7 +42,9 @@ epochrx,
 code_sel,
 pne,
 pnp,
-pnl
+pnl,
+irnss_sel,
+irnss_code
 );
 
 input res, ncoclk, codeclk;
@@ -50,6 +52,8 @@ input car_change;
 output epochrx;
 input [4:0] code_sel;
 output pne, pnp, pnl;
+input irnss_sel;
+input [10:1] irnss_code;
 
 wire res;
 wire ncoclk;
@@ -80,7 +84,9 @@ wire prncode;
     .car_change(car_change),
     .epochrx(epochrx),
     .code_sel(code_sel),
-    .goldcode(prncode));
+    .goldcode(prncode),
+    .irnss_sel(irnss_sel),
+    .irnss_code(irnss_code));
 
   always @(negedge res or posedge codeclk) begin
     if(res == 1'b 0) begin

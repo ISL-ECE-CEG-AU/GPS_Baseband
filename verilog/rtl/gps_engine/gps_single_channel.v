@@ -62,6 +62,8 @@ wire codeout;
 wire dll_sel1;
 wire fll_enabl;
 wire costas_enabl;
+wire irnss_sel;
+wire [10:1] irnss_code;
 
 
 wire [29:0] code_frequency ;
@@ -132,6 +134,7 @@ wire [2:0] adc3bit_q;
 wire [2:0] adc3bit_qsel;
 
 reg enable = 1'b 0;
+reg sat_change;
 
 wire nco_car_clk1p4m;
 wire nco_cod_clk1p0m;
@@ -160,6 +163,8 @@ reg [9:0] counter_data;
 reg count_reset = 1'b 0;
 wire [19:0] integmag;
 wire start; 
+wire [4:0] satellite_id2;
+wire [4:0] satellite_id1;
 
   assign fll_enable = acq & fll_enabl;
   assign dll_enable = dll_sel1 & acq;
@@ -188,7 +193,8 @@ wb_interface wb_i (
 	.carr_frequency_offset (carr_frequency_offset),
 	.acq_threshold (acq_threshold),
 	.sine_lut (sine_lut),
-	.satellite_id (satellite_id),
+	.satellite_id1 (satellite_id1),
+  .satellite_id2 (satellite_id2),
 	.prompt_idata (prompt_idata),
 	.prompt_qdata (prompt_qdata),
 	.late_idata (late_idata),
@@ -196,7 +202,10 @@ wb_interface wb_i (
 	.early_idata (early_idata),
 	.early_qdata (early_qdata),
 	.intg_ready (tr_len_clk1ms),
-	.acq_complete (acq)
+	.acq_complete (acq),
+  .irnss_sel(irnss_sel),
+  .irnss_code(irnss_code),
+  .sat_change(sat_change)
  ); 
 
 // 2 to 3 bit conv for I-channel IF Input
@@ -341,7 +350,9 @@ assign adc3bit_qsel = select_qmaxim == 1'b1 ? adc3bit_q : {3{1'b0}};
         .pnl(pnl1),
         .epochrx(epochrx),
         .code_sel(satellite_id),     // ----- Declare confg_reg_1 in input
-        .epoch(tr_epoclk_clk1ms)
+        .epoch(tr_epoclk_clk1ms),
+        .irnss_sel(irnss_sel),  //To be declared as inputs
+        .irnss_code(irnss_code)
     );
 
 
@@ -452,6 +463,25 @@ always @(negedge mclr or negedge tr_epoclk_clk1ms or posedge tr_accclr_clk1ms) b
       end
     end
   end
+
+  integer count_sat = 0;
+
+  always @(posedge tr_epoclk_clk1ms or negedge mclr) begin
+    if(mclr==1'b0) begin
+      count_sat = 0 ;
+      sat_change = 1'b0;
+    end
+    else begin
+      if (acq==1'b0 && count_sat<40920) begin
+        count_sat = count_sat + 1;
+      end else if(acq==1'b0 && count_sat==40920) begin
+        sat_change = ~sat_change ;
+        count_sat = 0;
+      end
+    end
+  end
+
+  assign satellite_id = sat_change == 1'b0 ? satellite_id1 : satellite_id2;
 
 
 

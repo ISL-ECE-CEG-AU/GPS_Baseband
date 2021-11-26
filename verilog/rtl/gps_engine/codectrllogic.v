@@ -53,7 +53,9 @@ pnp,
 pnl,
 epochrx,
 code_sel,
-epoch
+epoch,
+irnss_sel,
+irnss_code
 );
 
 input res, nco_cod_clk1p0m, nco_cod_clk2p0m, acq;
@@ -63,6 +65,8 @@ output pne, pnp, pnl;
 output epochrx;
 input [4:0] code_sel;
 input epoch;
+input irnss_sel;
+input [10:1] irnss_code;
 
 wire res;
 wire nco_cod_clk1p0m;
@@ -92,7 +96,9 @@ wire clktemp; wire clktemp1; reg clktempt;
     code_sel,
     pne,
     pnp,
-    pnl);
+    pnl,
+    irnss_sel,
+    irnss_code);
 
   assign epoch1 =  ~((epoch));
   always @(negedge res or posedge nco_cod_clk2p0m) begin

@@ -8,7 +8,8 @@ module wb_interface (
 	carr_frequency_offset,
 	acq_threshold,
 	sine_lut,
-	satellite_id,
+	satellite_id1,
+	satellite_id2,
 	prompt_idata,
 	prompt_qdata,
 	late_idata,
@@ -16,7 +17,10 @@ module wb_interface (
 	early_idata,
 	early_qdata,
 	intg_ready,
-	acq_complete
+	acq_complete,
+	irnss_sel,
+	irnss_code,
+	sat_change
 );
 
 
@@ -37,7 +41,9 @@ output reg [29:0] code_frequency_offset;
 output reg [29:0] carr_frequency_offset;
 output reg [14:0] acq_threshold;
 output reg [23:0] sine_lut;
-output reg [4:0]  satellite_id;
+output reg [4:0]  satellite_id1;
+output reg [4:0]  satellite_id2;
+input sat_change;
 input [19:0] prompt_idata ;
 input [19:0] prompt_qdata;
 input [19:0] late_idata;
@@ -46,6 +52,8 @@ input [19:0] early_idata;
 input [19:0] early_qdata;
 input intg_ready;
 input acq_complete;
+output reg [10:1] irnss_code;
+output reg irnss_sel;
 
 parameter CODE_FREQUENCY_REG_ADDR = 8'h00 ;
 parameter CARR_FREQUENCY_REG_ADDR = 8'h04 ;
@@ -60,6 +68,8 @@ parameter LATE_QDATA_REG_ADDR  = 8'h24;
 parameter EARLY_IDATA_REG_ADDR = 8'h28;
 parameter EARLY_QDATA_REG_ADDR = 8'h2C;
 parameter STATUS_REG_ADDR      = 8'h30;
+parameter IRNSS_REG_ADDR       = 8'h34;
+parameter SAT_REG_ADDR         = 8'h38;
 
 reg intg_ready_reg ;	
 reg intg_ready_ff1 ,intg_ready_ff2 ,intg_ready_ff3 ;	
@@ -98,8 +108,11 @@ always @(posedge wb_clk_i or negedge wb_rst_i)
 		carr_frequency_offset <= #1 30'h00000000;
 		acq_threshold <= #1 15'h0000;
 		sine_lut <= #1 24'h000000;
-		satellite_id <= #1 5'h00;
+		satellite_id1 <= #1 5'h00;
+		satellite_id2 <= #1 5'h00;
 		intg_ready_reg <= #1 1'b0;
+		irnss_sel <= #1 1'b0;
+		irnss_code <= #1 10'h000;
 	end
 	else begin
 		if (wb_wacc) begin
@@ -111,9 +124,14 @@ always @(posedge wb_clk_i or negedge wb_rst_i)
 				ACQ_THRESHOLD_REG_ADDR :  acq_threshold <= #1 wb_dat_i[14:0];
 				CONFG_REG_ADDR :  begin
 					sine_lut <= #1 wb_dat_i[23:0];
-					satellite_id <= #1 wb_dat_i[28:24];
+					satellite_id1 <= #1 wb_dat_i[28:24];
 				end
 				STATUS_REG_ADDR :    intg_ready_reg <= #1 wb_dat_i[0];
+				IRNSS_REG_ADDR : begin
+					irnss_sel <= #1 wb_dat_i[0];
+					irnss_code <= #1 wb_dat_i[10:1];
+				end
+				SAT_REG_ADDR : satellite_id2 <= #1 wb_dat_i[4:0];
 
 				default: ;
 			endcase
@@ -139,6 +157,7 @@ always @(posedge wb_clk_i or negedge wb_rst_i)
 			EARLY_IDATA_REG_ADDR : wb_dat_o <=  { {12{1'b0}},early_idata};
 			EARLY_QDATA_REG_ADDR : wb_dat_o <=  { {12{1'b0}},early_qdata};
 			STATUS_REG_ADDR      : wb_dat_o <= { {30{1'b0}},acq_complete,intg_ready_reg};  
+			SAT_REG_ADDR         : wb_dat_o <= {{26{1'b0}},sat_change,satellite_id2};
 			default: ;
 		endcase
 	end
