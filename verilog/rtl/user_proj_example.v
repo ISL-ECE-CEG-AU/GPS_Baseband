@@ -39,14 +39,14 @@ module user_proj_example #(
     parameter BITS = 32
 )(
 `ifdef USE_POWER_PINS
-    inout vdda1,	// User area 1 3.3V supply
-    inout vdda2,	// User area 2 3.3V supply
-    inout vssa1,	// User area 1 analog ground
-    inout vssa2,	// User area 2 analog ground
+    //inout vdda1,	// User area 1 3.3V supply
+    //inout vdda2,	// User area 2 3.3V supply
+    //inout vssa1,	// User area 1 analog ground
+    //inout vssa2,	// User area 2 analog ground
     inout vccd1,	// User area 1 1.8V supply
-    inout vccd2,	// User area 2 1.8v supply
+    //inout vccd2,	// User area 2 1.8v supply
     inout vssd1,	// User area 1 digital ground
-    inout vssd2,	// User area 2 digital ground
+    //inout vssd2,	// User area 2 digital ground
 `endif
 
     // Wishbone Slave ports (WB MI A)
@@ -74,27 +74,19 @@ module user_proj_example #(
     // IRQ
     output [2:0] irq
 );
-    wire clk;
-    wire rst;
 
     wire [`MPRJ_IO_PADS-1:0] io_in;
     wire [`MPRJ_IO_PADS-1:0] io_out;
     wire [`MPRJ_IO_PADS-1:0] io_oeb;
 
-    wire [31:0] rdata; 
-    wire [31:0] wdata;
-    wire [BITS-1:0] count;
-
-    wire valid;
-    wire [3:0] wstrb;
-    wire [31:0] la_write;
-
-    wire gps_clk ;
+    wire mclk ;
+    wire mclr;
     wire [1:0] gps_data_i ;
     wire [1:0] gps_data_q ;
     wire dll_sel ;
     wire select_qmaxim ;
-    wire codeout , epochrx ;
+    wire [7:0] codeout ;
+    wire [7:0] epochrx ;
 
     // IRQ
     assign irq = 3'b000;	// Unused
@@ -102,30 +94,48 @@ module user_proj_example #(
 
     //io_oeb is active low signal
 
-    assign gps_clk = io_in[18] ;                           // IO[18]
-    assign io_oeb[18]= 1'b1;
+    assign mclk = io_in[29] ;                           
+    assign io_oeb[29]= 1'b1;
 
-    assign gps_data_i[0] = io_in[19] ;                     // IO[19]
-    assign io_oeb[19]= 1'b1;
+    assign gps_data_i[0] = io_in[30] ;                   
+    assign io_oeb[30]= 1'b1;
 
-    assign gps_data_i[1] = io_in[20] ;                     // IO[20]
-    assign io_oeb[20]= 1'b1;
+    assign gps_data_i[1] = io_in[31] ;                     
+    assign io_oeb[31]= 1'b1;
 
-    assign gps_data_q[0] = io_in[21] ;                     // IO[21]
-    assign io_oeb[21]= 1'b1;
+    assign gps_data_q[0] = io_in[32] ;                     
+    assign io_oeb[32]= 1'b1;
 
-    assign gps_data_q[1] = io_in[22] ;                     // IO[22]
-    assign io_oeb[22]= 1'b1;
+    assign gps_data_q[1] = io_in[33] ;                     
+    assign io_oeb[33]= 1'b1;
 
-    assign dll_sel = la_data_in[0] ;
-    assign select_qmaxim = la_data_in[1] ;
-    assign la_data_out[2] = codeout ;
-    assign la_data_out[3] = epochrx ;
+    assign dll_sel = io_in[34] ;
+    assign io_oeb[34]= 1'b1;
+    assign select_qmaxim = io_in[35] ;
+    assign io_oeb[35]= 1'b1;
+    assign la_data_out[10:3] = codeout ;
+    assign la_data_out[18:11] = epochrx ;
+    assign mclr = io_in[36];
+    assign io_oeb[36]= 1'b1;
 
-    gps_multichannel gps_engine_i (
+    assign io_oeb[8] = 1'b0;      //Digital Outputs of Analog Macro and LVDT
+    assign io_oeb[9] = 1'b0;
+    assign io_oeb[14] = 1'b0;
+    assign io_oeb[15] = 1'b0;
+    assign io_oeb[25] = 1'b0;
+    assign io_oeb[26] = 1'b0;
+    assign io_oeb[27] = 1'b0;
 
-    .mclr (wb_rst_i),
-    .mclk (gps_clk ),
+    assign io_oeb[10] = 1'b1;     //Digital Inputs of Analog Macro and LVDT
+    assign io_oeb[12] = 1'b1;
+    assign io_oeb[17] = 1'b1;
+    assign io_oeb[18] = 1'b1;
+    assign io_oeb[23] = 1'b1;
+    assign io_oeb[24] = 1'b1;
+
+    gps_multichannel gps_engine_i(
+    .mclr (mclr),
+    .mclk (mclk),
     .adc2bit_i (gps_data_i),
     .adc2bit_q (gps_data_q),
     .codeout(codeout),
