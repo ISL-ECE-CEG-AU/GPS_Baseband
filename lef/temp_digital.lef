@@ -1,0 +1,113 @@
+VERSION 5.7 ;
+  NOWIREEXTENSIONATPIN ON ;
+  DIVIDERCHAR "/" ;
+  BUSBITCHARS "[]" ;
+MACRO temp_digital
+  CLASS BLOCK ;
+  FOREIGN temp_digital ;
+  ORIGIN 0.000 0.000 ;
+  SIZE 160.000 BY 160.000 ;
+  PIN c_clk
+    DIRECTION OUTPUT TRISTATE ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 40.110 0.000 40.390 4.000 ;
+    END
+  END c_clk
+  PIN counter_clk
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 156.000 79.600 160.000 80.200 ;
+    END
+  END counter_clk
+  PIN ref_clk
+    DIRECTION OUTPUT TRISTATE ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 0.000 39.480 4.000 40.080 ;
+    END
+  END ref_clk
+  PIN reset_12
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 80.130 156.000 80.410 160.000 ;
+    END
+  END reset_12
+  PIN shift_clk
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER met2 ;
+        RECT 120.150 0.000 120.430 4.000 ;
+    END
+  END shift_clk
+  PIN sr_out
+    DIRECTION OUTPUT TRISTATE ;
+    USE SIGNAL ;
+    PORT
+      LAYER met3 ;
+        RECT 0.000 119.040 4.000 119.640 ;
+    END
+  END sr_out
+  PIN vccd1
+    DIRECTION INPUT ;
+    USE POWER ;
+    PORT
+      LAYER met4 ;
+        RECT 29.545 10.640 31.145 147.120 ;
+    END
+    PORT
+      LAYER met4 ;
+        RECT 79.195 10.640 80.795 147.120 ;
+    END
+    PORT
+      LAYER met4 ;
+        RECT 128.850 10.640 130.450 147.120 ;
+    END
+  END vccd1
+  PIN vssd1
+    DIRECTION INPUT ;
+    USE GROUND ;
+    PORT
+      LAYER met4 ;
+        RECT 54.370 10.640 55.970 147.120 ;
+    END
+    PORT
+      LAYER met4 ;
+        RECT 104.025 10.640 105.625 147.120 ;
+    END
+  END vssd1
+  OBS
+      LAYER li1 ;
+        RECT 5.520 10.795 154.100 146.965 ;
+      LAYER met1 ;
+        RECT 5.520 10.640 154.100 147.120 ;
+      LAYER met2 ;
+        RECT 7.450 155.720 79.850 156.000 ;
+        RECT 80.690 155.720 150.330 156.000 ;
+        RECT 7.450 4.280 150.330 155.720 ;
+        RECT 7.450 4.000 39.830 4.280 ;
+        RECT 40.670 4.000 119.870 4.280 ;
+        RECT 120.710 4.000 150.330 4.280 ;
+      LAYER met3 ;
+        RECT 4.000 120.040 156.000 147.045 ;
+        RECT 4.400 118.640 156.000 120.040 ;
+        RECT 4.000 80.600 156.000 118.640 ;
+        RECT 4.000 79.200 155.600 80.600 ;
+        RECT 4.000 40.480 156.000 79.200 ;
+        RECT 4.400 39.080 156.000 40.480 ;
+        RECT 4.000 10.715 156.000 39.080 ;
+      LAYER met4 ;
+        RECT 49.975 10.640 53.970 147.120 ;
+        RECT 56.370 10.640 78.795 147.120 ;
+        RECT 81.195 10.640 99.985 147.120 ;
+  END
+END temp_digital
+END LIBRARY
+
