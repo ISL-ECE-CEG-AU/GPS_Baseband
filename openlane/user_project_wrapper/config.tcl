@@ -17,7 +17,7 @@
 # section begin
 
 source $::env(CARAVEL_ROOT)/openlane/user_project_wrapper_empty/fixed_wrapper_cfgs.tcl
-source $::env(CARAVEL_ROOT)/openlane/user_project_wrapper_empty/pdn.tcl
+source $::env(CARAVEL_ROOT)/openlane/user_project_wrapper_empty/default_wrapper_cfgs.tcl
 
 set script_dir [file dirname [file normalize [info script]]]
 
