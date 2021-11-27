@@ -667,10 +667,10 @@ module user_project_wrapper (user_clock2,
  analog_macro temp1 (.vinit(analog_io[13]),
     .vbiasr(analog_io[11]),
     .reset(io_in[10]),
-    .vdda1(vdda1),
-    .vssa1(vssa1),
+    .v9m(common),
     .Fvco(io_out[14]),
-    .v9m(common));
+    .vssa1(vssd1),
+    .vdda1(vccd1));
  temp_digital temp2 (.c_clk(io_out[15]),
     .counter_clk(common),
     .ref_clk(io_out[9]),
@@ -691,6 +691,6 @@ module user_project_wrapper (user_clock2,
     .y2(io_out[27]),
     .a2(io_in[18]),
     .a1(io_in[17]),
-    .vdda1(vdda1),
-    .vssa1(vssa1));
+    .vdda1(vccd1),
+    .vssa1(vssd1));
 endmodule

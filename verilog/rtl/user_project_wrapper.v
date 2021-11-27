@@ -124,8 +124,8 @@ wire common;
 
 analog_macro temp1 (
  `ifdef USE_POWER_PINS
-    .vdda1(vdda1),	
-    .vssa1(vssa1),	
+    .vdda1(vccd1),	
+    .vssa1(vssd1),	
 `endif
 .vbiasr(analog_io[11]),
 .vinit(analog_io[13]),
@@ -150,8 +150,8 @@ temp_digital temp2 (
 );
 LVDT temp3 (
 `ifdef USE_POWER_PINS
-    .vdda1(vdda1),	
-    .vssa1(vssa1),	
+    .vdda1(vccd1),	
+    .vssa1(vssd1),	
 `endif
  .Iin(analog_io[28]),
 .va(analog_io[19]),
