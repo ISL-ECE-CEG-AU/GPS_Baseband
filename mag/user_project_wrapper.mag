@@ -1,7 +1,7 @@
 magic
 tech sky130A
 magscale 1 2
-timestamp 1638096800
+timestamp 1638104295
 << locali >>
 rect 544761 661759 544795 666417
 rect 204211 650369 204637 650403
@@ -62250,19 +62250,19 @@ rect 592298 -7622 592382 -7386
 rect 592618 -7622 592650 -7386
 rect -8726 -7654 592650 -7622
 use LVDT  temp3
-timestamp 1638096800
+timestamp 1638104295
 transform 1 0 66022 0 1 579250
 box -26022 -21250 234618 98114
 use temp_digital  temp2
-timestamp 1638096800
+timestamp 1638104295
 transform 1 0 394000 0 1 535600
 box 0 0 32000 32000
 use analog_macro  temp1
-timestamp 1638096800
+timestamp 1638104295
 transform 1 0 401554 0 1 616054
 box -7554 -8854 157400 79208
 use user_proj_example  mprj
-timestamp 1638096800
+timestamp 1638104295
 transform 1 0 28000 0 1 34000
 box 289 0 274238 276712
 << labels >>
