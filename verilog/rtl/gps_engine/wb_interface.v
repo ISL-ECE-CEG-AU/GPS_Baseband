@@ -20,7 +20,8 @@ module wb_interface (
 	acq_complete,
 	irnss_sel,
 	irnss_code,
-	sat_change
+	sat_change,
+	timestamp_latch
 );
 
 
@@ -54,6 +55,7 @@ input intg_ready;
 input acq_complete;
 output reg [10:1] irnss_code;
 output reg irnss_sel;
+input [31:0] timestamp_latch ;
 
 parameter CODE_FREQUENCY_REG_ADDR = 8'h00 ;
 parameter CARR_FREQUENCY_REG_ADDR = 8'h04 ;
@@ -70,6 +72,7 @@ parameter EARLY_QDATA_REG_ADDR = 8'h2C;
 parameter STATUS_REG_ADDR      = 8'h30;
 parameter IRNSS_REG_ADDR       = 8'h34;
 parameter SAT_REG_ADDR         = 8'h38;
+parameter TIMESTAMP_LATCH_ADDR = 8'h3C;
 
 reg intg_ready_reg ;	
 reg intg_ready_ff1 ,intg_ready_ff2 ,intg_ready_ff3 ;	
@@ -158,6 +161,7 @@ always @(posedge wb_clk_i or negedge wb_rst_i)
 			EARLY_QDATA_REG_ADDR : wb_dat_o <=  { {12{1'b0}},early_qdata};
 			STATUS_REG_ADDR      : wb_dat_o <= { {30{1'b0}},acq_complete,intg_ready_reg};  
 			SAT_REG_ADDR         : wb_dat_o <= {{26{1'b0}},sat_change,satellite_id2};
+			TIMESTAMP_LATCH_ADDR : wb_dat_o <= timestamp_latch ;
 			default: ;
 		endcase
 	end

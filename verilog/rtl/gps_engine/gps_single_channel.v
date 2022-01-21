@@ -28,7 +28,8 @@ codeout,
 dll_sel1,
 fll_enabl,
 costas_enabl,
-select_qmaxim
+select_qmaxim,
+count32
 );
 
 input mclr, mclk;
@@ -51,6 +52,7 @@ input dll_sel1;
 input fll_enabl;
 input costas_enabl;
 input select_qmaxim; // to be given as GPIO
+input [31:0] count32 ;
 
 wire mclr;
 wire mclk;
@@ -64,6 +66,8 @@ wire fll_enabl;
 wire costas_enabl;
 wire irnss_sel;
 wire [10:1] irnss_code;
+wire [31:0] count32 ;
+reg [31:0] timestamp_latch;
 
 
 wire [29:0] code_frequency ;
@@ -85,6 +89,7 @@ wire pne1; wire pnp1; wire pnl1;
 
 
 reg [29:0] coffset; 
+reg sat_change;
 wire [29:0] coffset_costas;
 
 
@@ -134,7 +139,6 @@ wire [2:0] adc3bit_q;
 wire [2:0] adc3bit_qsel;
 
 reg enable = 1'b 0;
-reg sat_change;
 
 wire nco_car_clk1p4m;
 wire nco_cod_clk1p0m;
@@ -205,7 +209,8 @@ wb_interface wb_i (
 	.acq_complete (acq),
   .irnss_sel(irnss_sel),
   .irnss_code(irnss_code),
-  .sat_change(sat_change)
+  .sat_change(sat_change),
+  .timestamp_latch(timestamp_latch)
  ); 
 
 // 2 to 3 bit conv for I-channel IF Input
@@ -465,19 +470,28 @@ always @(negedge mclr or negedge tr_epoclk_clk1ms or posedge tr_accclr_clk1ms) b
   end
 
   integer count_sat = 0;
+  //reg sat_change;
 
   always @(posedge tr_epoclk_clk1ms or negedge mclr) begin
     if(mclr==1'b0) begin
-      count_sat = 0 ;
-      sat_change = 1'b0;
+      count_sat <= 0 ;
+      sat_change <= 1'b0;
     end
     else begin
       if (acq==1'b0 && count_sat<40920) begin
-        count_sat = count_sat + 1;
+        count_sat <= count_sat + 1;
       end else if(acq==1'b0 && count_sat==40920) begin
-        sat_change = ~sat_change ;
-        count_sat = 0;
+        sat_change <= ~sat_change ;
+        count_sat <= 0;
       end
+    end
+  end
+
+  always @(negedge tr_epoclk_clk1ms or negedge mclr) begin
+    if(mclr==1'b0) begin
+      timestamp_latch <= 32'd0 ;
+    end else begin
+      timestamp_latch <= count32;
     end
   end
 

@@ -19,7 +19,7 @@ input select_qmaxim,
 	input        wb_rst_i,     // synchronous active high reset
 	input  [31:0] wb_adr_i,     // lower address bits
 	input  [31:0] wb_dat_i,     // databus input
-	output [31:0] wb_dat_o,     // databus output
+	output reg [31:0] wb_dat_o,     // databus output
 	input        wb_we_i,      // write enable input
 	input        wb_stb_i,     // stobe/core select signal
 	input        wb_cyc_i,     // valid bus cycle input
@@ -50,6 +50,7 @@ wire ch5_wb_ack_o,ch6_wb_ack_o,ch7_wb_ack_o,ch8_wb_ack_o;
 
 wire [31:0] ch1_wb_dat_o, ch2_wb_dat_o, ch3_wb_dat_o, ch4_wb_dat_o;
 wire [31:0] ch5_wb_dat_o, ch6_wb_dat_o, ch7_wb_dat_o, ch8_wb_dat_o;
+reg [31:0] count32;
 
    // Module Address Select Logic
    assign ch1_select = (wb_adr_i[31:8] == 24'h00000A) ;
@@ -94,7 +95,8 @@ gps_single_channel ch1(
 	.wb_we_i(wb_we_i), 
 	.wb_stb_i(ch1_wb_stb_i), 
 	.wb_cyc_i(wb_cyc_i), 
-	.wb_ack_o(ch1_wb_ack_o)
+	.wb_ack_o(ch1_wb_ack_o),
+	.count32(count32)
 );
 
 gps_single_channel ch2(
@@ -116,7 +118,8 @@ gps_single_channel ch2(
 	.wb_we_i(wb_we_i), 
 	.wb_stb_i(ch2_wb_stb_i), 
 	.wb_cyc_i(wb_cyc_i), 
-	.wb_ack_o(ch2_wb_ack_o)
+	.wb_ack_o(ch2_wb_ack_o),
+	.count32(count32)
 );
 gps_single_channel ch3(
 	.mclr(mclr),
@@ -137,7 +140,8 @@ gps_single_channel ch3(
 	.wb_we_i(wb_we_i), 
 	.wb_stb_i(ch3_wb_stb_i), 
 	.wb_cyc_i(wb_cyc_i), 
-	.wb_ack_o(ch3_wb_ack_o)
+	.wb_ack_o(ch3_wb_ack_o),
+	.count32(count32)
 );
 gps_single_channel ch4(
 	.mclr(mclr),
@@ -158,7 +162,8 @@ gps_single_channel ch4(
 	.wb_we_i(wb_we_i), 
 	.wb_stb_i(ch4_wb_stb_i), 
 	.wb_cyc_i(wb_cyc_i), 
-	.wb_ack_o(ch4_wb_ack_o)
+	.wb_ack_o(ch4_wb_ack_o),
+	.count32(count32)
 );
 gps_single_channel ch5(
 	.mclr(mclr),
@@ -179,7 +184,8 @@ gps_single_channel ch5(
 	.wb_we_i(wb_we_i), 
 	.wb_stb_i(ch5_wb_stb_i), 
 	.wb_cyc_i(wb_cyc_i), 
-	.wb_ack_o(ch5_wb_ack_o)
+	.wb_ack_o(ch5_wb_ack_o),
+	.count32(count32)
 );
 gps_single_channel ch6(
 	.mclr(mclr),
@@ -200,7 +206,8 @@ gps_single_channel ch6(
 	.wb_we_i(wb_we_i), 
 	.wb_stb_i(ch6_wb_stb_i), 
 	.wb_cyc_i(wb_cyc_i), 
-	.wb_ack_o(ch6_wb_ack_o)
+	.wb_ack_o(ch6_wb_ack_o),
+	.count32(count32)
 );
 gps_single_channel ch7(
 	.mclr(mclr),
@@ -221,7 +228,8 @@ gps_single_channel ch7(
 	.wb_we_i(wb_we_i), 
 	.wb_stb_i(ch7_wb_stb_i), 
 	.wb_cyc_i(wb_cyc_i), 
-	.wb_ack_o(ch7_wb_ack_o)
+	.wb_ack_o(ch7_wb_ack_o),
+	.count32(count32)
 );
 gps_single_channel ch8(
 	.mclr(mclr),
@@ -242,7 +250,8 @@ gps_single_channel ch8(
 	.wb_we_i(wb_we_i), 
 	.wb_stb_i(ch8_wb_stb_i), 
 	.wb_cyc_i(wb_cyc_i), 
-	.wb_ack_o(ch8_wb_ack_o)
+	.wb_ack_o(ch8_wb_ack_o),
+	.count32(count32)
 );
 
 
@@ -259,6 +268,15 @@ begin
 		8'b10000000 : wb_dat_o <= ch8_wb_dat_o ;
 		default     : wb_dat_o <= 32'd0 ;
 	endcase
+end
+
+always @(negedge mclk or negedge mclr) begin
+	if (mclr==1'b0) begin
+		count32 <= 32'd0 ;
+	end
+	else begin
+		count32 <= count32 + 32'd1 ;
+	end
 end
 
 endmodule
