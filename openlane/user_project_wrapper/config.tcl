@@ -71,18 +71,20 @@ set ::env(GLB_RT_MAXLAYER) 4
 #set ::env(FP_PDN_CORE_RING) 1
 set ::env(FP_PDN_CHECK_NODES) 0
 #set ::env(FP_CORE_UTIL) 40
-#set ::env(VDD_NETS) [list {vccd1} {vdda2}]
-set ::env(VDD_NETS) [list {vccd1}]
-#set ::env(GND_NETS) [list {vssd1} {vssa2}]
-set ::env(GND_NETS) [list {vssd1}]
+#set ::env(VDD_NETS) [list {vccd1} {vccd2} {vdda1} {vdda2}]
+#set ::env(VDD_NETS) [list {vccd1}]
+#set ::env(GND_NETS) [list {vssd1} {vssd2} {vssa1} {vssa2}]
+#set ::env(GND_NETS) [list {vssd1}]
 #set ::env(PL_TARGET_DENSITY) 0.1
 set ::env(FP_SIZING) absolute
 set ::env(DIE_AREA) "0 0 2920 3520"
 
 # The following is because there are no std cells in the example wrapper project.
 set ::env(SYNTH_TOP_LEVEL) 1
+#set ::env(DETAILED_ROUTER) drcu
+#set ::env(GLOBAL_ROUTER) cugr
 #set ::env(PL_RANDOM_GLB_PLACEMENT) 1
-set ::env(SYNTH_STRATEGY) "AREA 0"
+#set ::env(SYNTH_STRATEGY) "AREA 0"
 #set ::env(OPT_CLEAN) 0
 
 set ::env(PL_RESIZER_DESIGN_OPTIMIZATIONS) 0
@@ -93,11 +95,11 @@ set ::env(PL_RESIZER_BUFFER_OUTPUT_PORTS) 0
 set ::env(FP_PDN_ENABLE_RAILS) 0
 #set ::env(FP_PDN_ENABLE_MACROS_GRID) 0
 #set ::env(FP_PDN_ENABLE_GLOBAL_CONNECTIONS) 1
-#set ::env(FP_PDN_MACRO_HOOKS) "\
-	mprj vccd1 vssd1 \
-	temp1 vdda2 vssa2"
+#set ::env(FP_PDN_MACRO_HOOKS) [list mprj vccd1 vssd1 temp1 vdda1 vssa1 temp2 vccd2 vssd2 temp3 vdda2 vssa2]
 #set ::env(GLB_RT_OBS) 
-		
+set ::env(RUN_ROUTING_DETAILED) 1
+#set ::env(ROUTING_OPT_ITERS) 15
+set ::env(ROUTING_CORES) 16
 
 set ::env(DIODE_INSERTION_STRATEGY) 0
 set ::env(FILL_INSERTION) 0
@@ -106,7 +108,7 @@ set ::env(CLOCK_TREE_SYNTH) 0
 
 set ::env(KLAYOUT_XOR_GDS) 1
 set ::env(KLAYOUT_XOR_XML) 1
-set ::env(QUIT_ON_LVS_ERROR) 0
+#set ::env(QUIT_ON_LVS_ERROR) 0
 #set ::env(QUIT_ON_ILLEGAL_OVERLAPS) 0
 
 #set ::env(LVS_CONNECT_BY_LABEL) 1
