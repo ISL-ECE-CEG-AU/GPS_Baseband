@@ -1,8 +1,8 @@
 module LVDT(
 
 `ifdef USE_POWER_PINS
-    inout vdda1,	
-    inout vssa1,	
+    inout vdd,	
+    inout vss,	
 `endif
 input Iin,
 input va,
