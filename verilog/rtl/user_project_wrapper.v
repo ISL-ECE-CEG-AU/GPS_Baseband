@@ -111,7 +111,7 @@ module user_project_wrapper #(
      // IO Pads
 
      .io_in (io_in),
-     .io_out(io_out),
+    // .io_out(io_out),
      .io_oeb(io_oeb),
 
      // IRQ
@@ -150,8 +150,8 @@ temp_digital temp2 (
 );
 LVDT temp3 (
 `ifdef USE_POWER_PINS
-    .vdda1(vccd1),	
-    .vssa1(vssd1),	
+    .vdd(vccd1),	
+    .vss(vssd1),	
 `endif
  .Iin(analog_io[28]),
 .va(analog_io[19]),
