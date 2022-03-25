@@ -641,4 +641,18 @@ module user_project_wrapper (user_clock2,
     .sr_out(io_out[8]),
     .vccd1(vccd1),
     .vssd1(vssd1));
+ LVDT temp3 (.Iin(analog_io[28]),
+    .vout(analog_io[21]),
+    .va(analog_io[19]),
+    .vb(analog_io[20]),
+    .vcap(analog_io[22]),
+    .vssa2(vssd1),
+    .vdda2(vccd1),
+    .re(io_in[24]),
+    .clk(io_in[23]),
+    .y1(io_out[26]),
+    .y0(io_out[25]),
+    .y2(io_out[27]),
+    .a2(io_in[18]),
+    .a1(io_in[17]));
 endmodule
