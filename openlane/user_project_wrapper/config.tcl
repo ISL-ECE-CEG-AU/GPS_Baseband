@@ -49,21 +49,21 @@ set ::env(MACRO_PLACEMENT_CFG) $script_dir/macro.cfg
 ### Black-box verilog and views
 set ::env(VERILOG_FILES_BLACKBOX) "\
 	$::env(CARAVEL_ROOT)/verilog/rtl/defines.v \
+	$script_dir/../../verilog/rtl/LVDT.v \
 	$script_dir/../../verilog/rtl/user_proj_example.v \
 	$script_dir/../../verilog/rtl/analog_macro.v \
-	$script_dir/../../verilog/rtl/LVDT.v \
 	$script_dir/../../verilog/rtl/temp_digital.v"
 
 set ::env(EXTRA_LEFS) "\
+	$script_dir/../../lef/LVDT.lef \
 	$script_dir/../../lef/user_proj_example.lef \
 	$script_dir/../../lef/analog_macro.lef \
-	$script_dir/../../lef/LVDT.lef \
 	$script_dir/../../lef/temp_digital.lef"
 
 set ::env(EXTRA_GDS_FILES) "\
+	$script_dir/../../gds/LVDT.gds \
 	$script_dir/../../gds/user_proj_example.gds \
 	$script_dir/../../gds/analog_macro.gds \
-	$script_dir/../../gds/LVDT.gds \
 	$script_dir/../../gds/temp_digital.gds"
 
 set ::env(GLB_RT_MAXLAYER) 4
